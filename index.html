@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pet Registration</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&family=Tektur:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Updated background color matched from the uploaded photo */
+            --bg-color: #23257b; 
+            --neon-blue: #00f3ff;
+            --neon-blue-dark: #0055ff;
+            --neon-purple: #d500f9;
+            --error-red: #ff0055;
+            --text-light: #e0f7fa;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-light);
+            font-family: 'IBM Plex Sans', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .form-container {
+            background: rgba(0, 10, 40, 0.8);
+            padding: 40px;
+            border-radius: 15px;
+            border: 1px solid var(--neon-blue);
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.2);
+            backdrop-filter: blur(10px);
+            width: 100%;
+            max-width: 650px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        h1 {
+            font-family: 'Tektur', sans-serif;
+            font-size: clamp(32px, 8vw, 56px);
+            text-align: center;
+            color: var(--neon-blue);
+            text-shadow: 0 0 15px var(--neon-blue);
+            margin: 0 0 40px 0;
+            text-transform: uppercase;
+        }
+
+        .form-group { margin-bottom: 20px; }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--neon-blue);
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        input[type="text"], input[type="email"], input[type="tel"], input[type="url"], input[type="file"], select, textarea {
+            width: 100%;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 2px solid var(--neon-blue-dark);
+            border-radius: 5px;
+            color: #ffffff;
+            font-size: 16px;
+            font-family: 'IBM Plex Sans', sans-serif;
+            transition: 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 15px var(--neon-blue);
+        }
+
+        select option {
+            background-color: var(--bg-color);
+            color: #ffffff;
+        }
+
+        textarea { resize: vertical; }
+
+        input[type="file"]::file-selector-button {
+            background: transparent;
+            color: var(--neon-blue);
+            border: 1px solid var(--neon-blue);
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 15px;
+            font-family: 'IBM Plex Sans', sans-serif;
+            text-transform: uppercase;
+            font-size: 12px;
+            transition: 0.3s;
+        }
+
+        input[type="file"]::file-selector-button:hover {
+            background: var(--neon-blue);
+            color: var(--bg-color);
+            box-shadow: 0 0 10px var(--neon-blue);
+        }
+
+        .checkbox-row {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .checkbox-group label {
+            margin-bottom: 0;
+            cursor: pointer;
+        }
+
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: var(--neon-blue);
+        }
+
+        /* --- Creative Price Listing Styles --- */
+        .price-tiers {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-left: 32px;
+        }
+
+        .price-badge {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--neon-blue-dark);
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-family: 'Tektur', sans-serif;
+            font-size: 14px;
+            color: var(--text-light);
+            transition: all 0.3s ease;
+            cursor: default;
+            flex: 1;
+            text-align: center;
+        }
+
+        .price-badge span {
+            display: block;
+            color: var(--neon-blue);
+            font-size: 18px;
+            font-weight: 700;
+            margin-top: 5px;
+            text-shadow: 0 0 8px rgba(0, 243, 255, 0.3);
+        }
+
+        .price-badge:hover {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 12px rgba(0, 243, 255, 0.2);
+            transform: translateY(-2px);
+            background: rgba(0, 243, 255, 0.05);
+        }
+
+        .price-badge.premium {
+            border-color: var(--neon-purple);
+        }
+
+        .price-badge.premium span {
+            color: var(--neon-purple);
+            text-shadow: 0 0 8px rgba(213, 0, 249, 0.4);
+        }
+
+        .price-badge.premium:hover {
+            box-shadow: 0 0 12px rgba(213, 0, 249, 0.3);
+            background: rgba(213, 0, 249, 0.05);
+        }
+        /* ------------------------------------- */
+
+        .error-msg {
+            color: var(--error-red);
+            font-size: 13px;
+            margin-top: 5px;
+            display: none;
+            font-weight: 600;
+            text-shadow: 0 0 5px var(--error-red);
+        }
+
+        button {
+            background: transparent;
+            color: var(--neon-blue);
+            border: 2px solid var(--neon-blue);
+            padding: 15px;
+            font-family: 'Tektur', sans-serif;
+            font-size: 20px;
+            cursor: pointer;
+            width: 100%;
+            border-radius: 5px;
+            margin-top: 20px;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+
+        button:hover {
+            background: var(--neon-blue);
+            color: var(--bg-color);
+            box-shadow: 0 0 25px var(--neon-blue);
+        }
+
+        #success-overlay {
+            display: none;
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-color);
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            text-align: center;
+            padding: 20px;
+        }
+
+        #success-overlay h2 {
+            font-family: 'Tektur', sans-serif;
+            color: var(--neon-blue);
+            font-size: 32px;
+        }
+
+        #loading {
+            display: none;
+            text-align: center;
+            color: var(--neon-blue);
+            margin-top: 20px;
+            font-family: 'Tektur', sans-serif;
+            letter-spacing: 2px;
+        }
+
+        @media (max-width: 480px) {
+            .form-container { padding: 25px; }
+            h1 { margin-bottom: 25px; }
+            .price-tiers { margin-left: 0; flex-direction: column; gap: 10px; }
+            .price-badge { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; }
+            .price-badge span { margin-top: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <div id="success-overlay">
+            <h2>Thanks for your registration</h2>
+            <button onclick="location.reload()" style="width: auto; padding: 10px 30px; font-size: 16px;">Add Another</button>
+        </div>
+
+        <h1>Register Pet</h1>
+        
+        <form id="petForm" autocomplete="off">
+            
+            <div class="form-group"><label>First Name</label><input type="text" name="OwnerFirstName" required autocomplete="off" spellcheck="false" class="no-autofill"></div>
+            
+            <div class="form-group"><label>Last Name</label><input type="text" name="OwnerSecondName" required autocomplete="off" spellcheck="false" class="no-autofill"></div>
+            
+            <div class="form-group"><label>Email</label><input type="email" name="Email" required autocomplete="off" spellcheck="false" class="no-autofill"></div>
+            
+            <div class="form-group"><label>Phone</label><input type="tel" name="Phone" required autocomplete="off" class="no-autofill"></div>
+            
+            <div class="form-group"><label>Pet Name</label><input type="text" name="PetName" required autocomplete="off" spellcheck="false" class="no-autofill"></div>
+            
+            <div class="form-group">
+                <label>Pet Type</label>
+                <select name="Type" required autocomplete="off">
+                    <option value="" disabled selected>Select Pet Type</option>
+                    <option value="Dog">Dog</option>
+                    <option value="Cat">Cat</option>
+                    <option value="Bird">Bird</option>
+                    <option value="Reptile">Reptile</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Choose pet Sex</label>
+                <select name="Sex" required autocomplete="off">
+                    <option value="" disabled selected>Select Sex</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Unknown">Unknown / Other</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Please add description</label>
+                <textarea name="Description" rows="3" placeholder="Breed, color, spayed or castrated, distinct markings..." required autocomplete="off" spellcheck="false" class="no-autofill"></textarea>
+            </div>
+
+            <div class="form-group"><label>Upload Pet Photo</label><input type="file" id="petPhotoFile" accept="image/*" required></div>
+
+            <div class="form-group"><label>Microchipping Clinic</label><input type="text" name="Clinic" required autocomplete="off" spellcheck="false" class="no-autofill"></div>
+
+            <div class="form-group">
+                <label>Microchip Number</label>
+                <input type="text" id="microchip" name="Microchip" required autocomplete="off" class="no-autofill">
+                <div id="microchipError" class="error-msg">The Microchip Number is invalid. Please try again.</div>
+            </div>
+
+            <div class="form-group"><label>Upload Microchip Sticker Photo</label><input type="file" id="stickerFile" accept="image/*" required></div>
+
+            <div class="checkbox-row">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="paid" name="Paid" value="Yes">
+                    <label for="paid">Select Tier & Confirm Payment</label>
+                </div>
+                <div class="price-tiers">
+                    <div class="price-badge">
+                        Basic
+                        <span>$50.00/Year</span>
+                    </div>
+                    <div class="price-badge">
+                        Standard
+                        <span>$100.00/Year</span>
+                    </div>
+                    <div class="price-badge premium">
+                        Premium
+                        <span>$150.00/Year</span>
+                    </div>
+                </div>
+            </div>
+            <div id="paidError" class="error-msg">Please pay to proceed. Thank you.</div>
+
+            <button type="submit" id="submitBtn">Register My Pet</button>
+            <div id="loading">UPLOADING TO PETID REGISTRY...<br><small style="font-size:12px; font-family:'IBM Plex Sans', sans-serif;">(This may take a moment...)</small></div>
+        </form>
+    </div>
+
+    <script>
+        // --- AUTOFILL PREVENTION SCRIPT ---
+        document.addEventListener("DOMContentLoaded", function() {
+            const noAutofillFields = document.querySelectorAll('.no-autofill');
+            noAutofillFields.forEach(field => {
+                field.setAttribute('readonly', 'readonly');
+                
+                // Allow typing once the user interacts with the field
+                field.addEventListener('focus', function() {
+                    this.removeAttribute('readonly');
+                });
+                field.addEventListener('click', function() {
+                    this.removeAttribute('readonly');
+                });
+            });
+        });
+        // ----------------------------------
+
+        // Ensure you update this with your new deployment URL if you make a new deployment in Apps Script
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwZlSBrlkNjHC4nZ27gjgmzSp_w4a9OcljcQA8DKy27icnGQK-Z5G9lBjJeliCN5Oy47A/exec';
+
+        const getBase64 = (file) => new Promise((resolve, reject) => {
+            if (!file) return resolve(null);
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result.split(',')[1]);
+            reader.onerror = error => reject(error);
+        });
+
+        document.getElementById('petForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const microchip = document.getElementById('microchip').value;
+            const paid = document.getElementById('paid').checked;
+            
+            let isValid = true;
+            if (!/^\d{15}$/.test(microchip)) {
+                document.getElementById('microchipError').style.display = 'block';
+                isValid = false;
+            } else { document.getElementById('microchipError').style.display = 'none'; }
+
+            if (!paid) {
+                document.getElementById('paidError').style.display = 'block';
+                isValid = false;
+            } else { document.getElementById('paidError').style.display = 'none'; }
+
+            if (!isValid) return;
+
+            document.getElementById('submitBtn').style.display = 'none';
+            document.getElementById('loading').style.display = 'block';
+
+            try {
+                const stickerFile = document.getElementById('stickerFile').files[0];
+                const petPhotoFile = document.getElementById('petPhotoFile').files[0];
+
+                const stickerBase64 = await getBase64(stickerFile);
+                const petPhotoBase64 = await getBase64(petPhotoFile);
+
+                const formData = new FormData(this);
+                formData.append('PUID', 'PET-' + Date.now());
+                
+                if (stickerFile) {
+                    formData.append('StickerBase64', stickerBase64);
+                    formData.append('StickerFileName', 'Sticker_' + Date.now() + '_' + stickerFile.name);
+                    formData.append('StickerMimeType', stickerFile.type);
+                }
+                
+                if (petPhotoFile) {
+                    formData.append('PetPhotoBase64', petPhotoBase64);
+                    formData.append('PetPhotoFileName', 'Pet_' + Date.now() + '_' + petPhotoFile.name);
+                    formData.append('PetPhotoMimeType', petPhotoFile.type);
+                }
+
+                const params = new URLSearchParams(formData);
+
+                fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    body: params,
+                    mode: 'no-cors'
+                })
+                .then(() => {
+                    document.getElementById('success-overlay').style.display = 'flex';
+                })
+                .catch(err => {
+                    alert("Critical Link Error. Please check your connection.");
+                    document.getElementById('submitBtn').style.display = 'block';
+                    document.getElementById('loading').style.display = 'none';
+                });
+
+            } catch (error) {
+                alert("Error processing the photos. Please try again.");
+                document.getElementById('submitBtn').style.display = 'block';
+                document.getElementById('loading').style.display = 'none';
+                console.error(error);
+            }
+        });
+    </script>
+</body>
+</html>
